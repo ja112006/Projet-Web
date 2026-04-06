@@ -1,15 +1,15 @@
-Projet Web 
+# Projet Web 
 
-Reservation de rendez-vous enseignants/etudiants
+## Reservation de rendez-vous enseignants/etudiants
 
 Application Flask simple pour gerer la prise de rendez-vous entre etudiants et enseignants.
 
-Collaborateurs (Groupe 1)
+## Collaborateurs (Groupe 1)
 
 - Dylan Becheker
 - Jaber Benyacoub
 
-Fonctionnalites
+## Fonctionnalites
 
 - Inscription et connexion avec deux roles: `etudiant` et `enseignant`
 - Gestion des disponibilites enseignant (date + heure debut/fin)
@@ -17,7 +17,7 @@ Fonctionnalites
 - Annulation de rendez-vous
 - Tableaux de bord separes selon le role
 
-Structure du projet
+## Structure du projet
 
 - app.py: routes Flask, session, logique web
 - models/: methodes pour tables SQL (users, disponibilites, rendez_vous)
