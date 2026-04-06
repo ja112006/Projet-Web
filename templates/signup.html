@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block title %}Inscription - RDV Université{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>Créer un compte</h2>
+        
+        <form method="POST" action="{{ url_for('signup') }}" id="signup-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="prenom">Prénom</label>
+                    <input 
+                        type="text" 
+                        id="prenom" 
+                        name="prenom" 
+                        placeholder="Dylan"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="nom">Nom</label>
+                    <input 
+                        type="text" 
+                        id="nom" 
+                        name="nom" 
+                        placeholder="Becheker"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email universitaire</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="votre.email@univ-amu.fr"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="role">Je suis</label>
+                <select id="role" name="role" required>
+                    <option value="">-- Sélectionnez --</option>
+                    <option value="etudiant">Étudiant</option>
+                    <option value="enseignant">Enseignant</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mot de passe (minimum 8 caractères)</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="*******"
+                    minlength="8"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password_confirm">Confirmer le mot de passe</label>
+                <input 
+                    type="password" 
+                    id="password_confirm" 
+                    name="password_confirm" 
+                    placeholder="*******"
+                    minlength="8"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">Créer mon compte</button>
+        </form>
+
+        <p class="auth-link">
+            Déjà un compte ? 
+            <a href="{{ url_for('login') }}">Se connecter</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

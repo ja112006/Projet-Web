@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}Mes rendez-vous{% endblock %}
+
+{% block content %}
+<div class="rdv-page">
+    <h2>Mes rendez-vous</h2>
+    
+    {% if rendez_vous %}
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Heure</th>
+                        {% if role == 'etudiant' %}
+                            <th>Enseignant</th>
+                            <th>Email</th>
+                        {% else %}
+                            <th>Étudiant</th>
+                            <th>Email</th>
+                        {% endif %}
+                        <th>Motif</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rdv in rendez_vous %}
+                    <tr class="{% if rdv.statut == 'annulé' %}rdv-annule{% endif %}">
+                        <td>{{ rdv.date_heure_debut[:10] }}</td>
+                        <td>{{ rdv.date_heure_debut[11:16] }} - {{ rdv.date_heure_fin[11:16] }}</td>
+                        {% if role == 'etudiant' %}
+                            <td>{{ rdv.enseignant_prenom }} {{ rdv.enseignant_nom }}</td>
+                            <td>{{ rdv.enseignant_email }}</td>
+                        {% else %}
+                            <td>{{ rdv.etudiant_prenom }} {{ rdv.etudiant_nom }}</td>
+                            <td>{{ rdv.etudiant_email }}</td>
+                        {% endif %}
+                        <td>{{ rdv.motif or "Non précisé" }}</td>
+                        <td>
+                            {% if rdv.statut == 'confirmé' %}
+                                <span class="badge badge-success">Confirmé</span>
+                            {% else %}
+                                <span class="badge badge-danger">Annulé</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if rdv.statut == 'confirmé' and role == 'etudiant' %}
+                                <form method="POST"
+                                      action="{{ url_for('annuler_rdv', rdv_id=rdv.id) }}"
+                                      class="inline-form"
+                                      onsubmit="return confirmDelete('Annuler ce rendez-vous ?');">
+                                    <button type="submit" class="btn btn-danger small-btn">
+                                        Annuler
+                                    </button>
+                                </form>
+                            {% elif rdv.statut == 'confirmé' %}
+                                <span class="text-muted">-</span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="card">
+            <p class="text-center text-muted">
+                Vous n'avez aucun rendez-vous.
+            </p>
+        </div>
+    {% endif %}
+    
+    <div class="mt-2">
+        {% if role == 'etudiant' %}
+            <a href="{{ url_for('etudiant_dashboard') }}" class="btn btn-primary">
+                ← Retour au tableau de bord
+            </a>
+        {% else %}
+            <a href="{{ url_for('enseignant_dashboard') }}" class="btn btn-primary">
+                ← Retour au tableau de bord
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

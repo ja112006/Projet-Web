@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block title %}Tableau de bord - Enseignant{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h2>Tableau de bord Enseignant</h2>
+    
+    <!-- Prochains rendez-vous -->
+    <div class="card">
+        <h3>Mes prochains rendez-vous</h3>
+        
+        {% if rdv_futurs %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Heure</th>
+                        <th>Étudiant</th>
+                        <th>Email</th>
+                        <th>Motif</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rdv in rdv_futurs %}
+                    <tr>
+                        <td>{{ rdv.date_heure_debut[:10] }}</td>
+                        <td>{{ rdv.date_heure_debut[11:16] }} - {{ rdv.date_heure_fin[11:16] }}</td>
+                        <td>{{ rdv.etudiant_prenom }} {{ rdv.etudiant_nom }}</td>
+                        <td>{{ rdv.etudiant_email }}</td>
+                        <td>{{ rdv.motif or "Non précisé" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div class="mt-1">
+                <a href="{{ url_for('mes_rdv_enseignant') }}" class="btn btn-primary">
+                    Voir tous mes rendez-vous
+                </a>
+            </div>
+        {% else %}
+            <p class="text-center text-muted">
+                Aucun rendez-vous à venir
+            </p>
+        {% endif %}
+    </div>
+    
+    <!-- Mes disponibilités -->
+    <div class="card">
+        <h3>Mes disponibilités</h3>
+        
+        <div class="mt-1">
+            <a href="{{ url_for('disponibilites') }}" class="btn btn-success">
+                + Gérer mes disponibilités
+            </a>
+        </div>
+        
+        {% if disponibilites %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Horaire</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dispo in disponibilites[:5] %}
+                    <tr>
+                        <td>{{ dispo.jour }}</td>
+                        <td>{{ dispo.heure_debut }} - {{ dispo.heure_fin }}</td>
+                        <td>
+                            {% if dispo.est_disponible %}
+                                <span class="status-available">Disponible</span>
+                            {% else %}
+                                <span class="status-unavailable">Indisponible</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            {% if disponibilites|length > 5 %}
+            <p class="text-center text-muted mt-1">
+                Et {{ disponibilites|length - 5 }} autres disponibilités
+            </p>
+            {% endif %}
+        {% else %}
+            <p class="text-center text-muted">
+                Vous n'avez pas encore défini de disponibilités.<br>
+                Cliquez sur "Gérer mes disponibilités" pour en ajouter.
+            </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

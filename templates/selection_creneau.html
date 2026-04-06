@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block title %}Prendre RDV - {{ enseignant.prenom }} {{ enseignant.nom }}{% endblock %}
+
+{% block content %}
+<div class="rdv-selection">
+    <h2>Prendre rendez-vous avec {{ enseignant.prenom }} {{ enseignant.nom }}</h2>
+    <p class="text-center text-muted">{{ enseignant.email }}</p>
+    
+    {% if not jours_disponibles %}
+        <div class="card">
+            <p class="text-center text-muted">
+                Cet enseignant n'a pas de disponibilités pour le moment.
+            </p>
+            <div class="text-center">
+                <a href="{{ url_for('etudiant_dashboard') }}" class="btn btn-primary">
+                    Retour au tableau de bord
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <!-- Sélection du jour -->
+        <div class="card">
+            <h3>Choisissez un jour</h3>
+            
+            <div class="jours-grid">
+                {% for jour in jours_disponibles %}
+                <a href="{{ url_for('selection_creneau', enseignant_id=enseignant.id, jour=jour) }}" 
+                   class="jour-btn {% if jour == jour_selectionne %}active{% endif %}">
+                    {{ jour }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Sélection du créneau -->
+        {% if jour_selectionne %}
+        <div class="card">
+            <h3>Choisissez un créneau</h3>
+            
+            {% if creneaux %}
+                <form method="POST" action="{{ url_for('reserver_rdv') }}" id="rdv-form">
+                    <input type="hidden" name="enseignant_id" value="{{ enseignant.id }}">
+                    
+                    <div class="creneaux-grid">
+                        {% for creneau in creneaux %}
+                        <label class="creneau-label">
+                            <input type="radio" 
+                                   name="creneau" 
+                                   value="{{ loop.index0 }}"
+                                   data-dispo-id="{{ creneau.disponibilite_id }}"
+                                   data-debut="{{ creneau.date_heure_debut }}"
+                                   data-fin="{{ creneau.date_heure_fin }}"
+                                   required>
+                            <span class="creneau-time">
+                                {{ creneau.heure_debut }} - {{ creneau.heure_fin }}
+                            </span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    
+                    <input type="hidden" name="disponibilite_id" id="disponibilite_id">
+                    <input type="hidden" name="date_heure_debut" id="date_heure_debut">
+                    <input type="hidden" name="date_heure_fin" id="date_heure_fin">
+                    
+                    <div class="form-group mt-2">
+                        <label for="motif">Motif du rendez-vous (optionnel)</label>
+                        <textarea 
+                            id="motif" 
+                            name="motif" 
+                            placeholder="Ex: Questions sur le cours de mathématiques, conseil pour mon projet..."
+                            rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">
+                        Confirmer le rendez-vous
+                    </button>
+                </form>
+            {% else %}
+                <p class="text-center text-muted">
+                    Aucun créneau disponible pour ce jour.
+                </p>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <div class="mt-2">
+            <a href="{{ url_for('etudiant_dashboard') }}" class="btn btn-primary">
+                ← Retour au tableau de bord
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+// Gérer la sélection du créneau
+"use strict";
+document.getElementById('rdv-form')?.addEventListener('submit', function(e) {
+    const selectedCreneau = document.querySelector('input[name="creneau"]:checked');
+    
+    if (selectedCreneau) {
+        document.getElementById('disponibilite_id').value = selectedCreneau.dataset.dispoId;
+        document.getElementById('date_heure_debut').value = selectedCreneau.dataset.debut;
+        document.getElementById('date_heure_fin').value = selectedCreneau.dataset.fin;
+    }
+});
+</script>
+{% endblock %}

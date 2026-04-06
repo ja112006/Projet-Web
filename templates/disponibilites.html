@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block title %}Mes disponibilités{% endblock %}
+
+{% block content %}
+<div class="disponibilites-page">
+    <h2>Gérer mes disponibilités</h2>
+    
+    <!-- Formulaire d'ajout -->
+    <div class="card">
+        <h3>Ajouter une disponibilité</h3>
+        
+        <form method="POST" action="{{ url_for('ajouter_disponibilite') }}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="jour">Date</label>
+                    <input type="date" 
+                           id="jour" 
+                           name="jour" 
+                           min="{{ today }}"
+                           required>
+                </div>
+                    
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="heure_debut">Heure de début</label>
+                    <input type="time" 
+                           id="heure_debut" 
+                           name="heure_debut" 
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="heure_fin">Heure de fin</label>
+                    <input type="time" 
+                           id="heure_fin" 
+                           name="heure_fin" 
+                           required>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-success">
+                + Ajouter cette disponibilité
+            </button>
+        </form>
+    </div>
+    
+    <!-- Liste des disponibilités -->
+    <div class="card">
+        <h3>Mes disponibilités actuelles</h3>
+        
+        {% if disponibilites %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Horaire</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dispo in disponibilites %}
+                    <tr>
+                        <td>{{ dispo.jour }}</td>
+                        <td>{{ dispo.heure_debut }} - {{ dispo.heure_fin }}</td>
+                        <td>
+                            {% if dispo.est_disponible %}
+                                <span class="status-available">Disponible</span>
+                            {% else %}
+                                <span class="status-unavailable">Indisponible</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="POST"
+                                  action="{{ url_for('supprimer_disponibilite', dispo_id=dispo.id) }}"
+                                  class="inline-form"
+                                  onsubmit="return confirmDelete('Supprimer cette disponibilité ?');">
+                                <button type="submit" class="btn btn-danger small-btn">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-center text-muted">
+                Vous n'avez pas encore défini de disponibilités.
+            </p>
+        {% endif %}
+    </div>
+    
+    <div class="mt-2">
+        <a href="{{ url_for('enseignant_dashboard') }}" class="btn btn-primary">
+            ← Retour au tableau de bord
+        </a>
+    </div>
+</div>
+
+<script>
+// Définir la date minimale à aujourd'hui
+"use strict";
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('jour').min = today;
+});
+</script>
+{% endblock %}

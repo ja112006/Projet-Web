@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}Tableau de bord - Étudiant{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h2>Tableau de bord Étudiant</h2>
+    
+    <!-- Prochains rendez-vous -->
+    <div class="card">
+        <h3>Mes prochains rendez-vous</h3>
+        
+        {% if rdv_futurs %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Heure</th>
+                        <th>Enseignant</th>
+                        <th>Motif</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rdv in rdv_futurs %}
+                    <tr>
+                        <td>{{ rdv.date_heure_debut[:10] }}</td>
+                        <td>{{ rdv.date_heure_debut[11:16] }} - {{ rdv.date_heure_fin[11:16] }}</td>
+                        <td>{{ rdv.enseignant_prenom }} {{ rdv.enseignant_nom }}</td>
+                        <td>{{ rdv.motif or "Non précisé" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div class="mt-1">
+                <a href="{{ url_for('mes_rdv_etudiant') }}" class="btn btn-primary">
+                    Voir tous mes rendez-vous
+                </a>
+            </div>
+        {% else %}
+            <p class="text-center text-muted">
+                Vous n'avez aucun rendez-vous à venir
+            </p>
+        {% endif %}
+    </div>
+    
+    <!-- Liste des enseignants -->
+    <div class="card">
+        <h3>Prendre rendez-vous avec un enseignant</h3>
+        
+        {% if enseignants %}
+            <div class="enseignants-grid">
+                {% for enseignant in enseignants %}
+                <div class="enseignant-card">
+                    <div class="enseignant-info">
+                        <h4>{{ enseignant.prenom }} {{ enseignant.nom }}</h4>
+                        <p>{{ enseignant.email }}</p>
+                    </div>
+                    <a href="{{ url_for('selection_creneau', enseignant_id=enseignant.id) }}" 
+                       class="btn btn-success">
+                        Prendre RDV
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center text-muted">
+                Aucun enseignant disponible pour le moment
+            </p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

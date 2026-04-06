@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Prise de RDV Universitaire{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <h1 class="logo">RDV Université</h1>
+                
+                {% if session.get('user_id') %}
+                <div class="nav-links">
+                    <span class="user-info">
+                        {{ session.get('prenom') }} {{ session.get('nom') }}
+                        ({{ 'Enseignant' if session.get('role') == 'enseignant' else 'Étudiant' }})
+                    </span>
+                    <!-- La NavBar change selon le profil utilisateur (etudiant ou professeur)-->
+                    {% if session.get('role') == 'etudiant' %}
+                        <a href="{{ url_for('etudiant_dashboard') }}">Tableau de bord</a>
+                        <a href="{{ url_for('mes_rdv_etudiant') }}">Mes RDV</a>
+                    {% elif session.get('role') == 'enseignant' %}
+                        <a href="{{ url_for('enseignant_dashboard') }}">Tableau de bord</a>
+                        <a href="{{ url_for('mes_rdv_enseignant') }}">Mes RDV</a>
+                        <a href="{{ url_for('disponibilites') }}">Disponibilités</a>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('logout') }}" class="btn-logout">Déconnexion</a>
+                </div>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Messages flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Contenu de la page load par block content, pour eviter d'include le navbar et footer à chaque file -->
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 - Projet Prise de RDV Universitaire</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+Dans une université, prendre rendez-vous avec un enseignant relève souvent du parcours du combattant. 
+Les étudiants doivent envoyer des emails, attendre des réponses qui peuvent tarder plusieurs jours, 
+proposer des créneaux qui ne conviennent finalement pas, et relancer à plusieurs reprises. 
+De leur côté, les enseignants reçoivent des dizaines d'emails de demandes de rendez-vous, doivent 
+vérifier manuellement leur emploi du temps, répondre individuellement à chaque étudiant, et gérer les
+conflits de planning. Cette situation génère une perte de temps considérable des deux côtés et des 
+rendez-vous manqués par manque de coordination. Les étudiants qui ont besoin d'aide pour un cours, 
+d'un conseil pour leur orientation, ou d'une signature de document administratif se retrouvent parfois
+à attendre une semaine avant d'obtenir un simple rendez-vous de 15 minutes. Les enseignants, quant à eux,
+passent un temps précieux à gérer leur agenda au lieu de se concentrer sur leurs missions d'enseignement 
+et de recherche. Cette problématique est d'autant plus importante en période d'examens ou de rendu de 
+projets, où la demande de rendez-vous explose et où la réactivité est cruciale.
